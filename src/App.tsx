@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 function App() {
   const [scrolled, setScrolled] = useState(false);
+  const [legalView, setLegalView] = useState<string | null>(null);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -230,9 +231,67 @@ function App() {
           </div>
           <div className="footer-bottom">
             <p>© 2026 Al Amanah Funérailles (Amana-Janaza). Tous droits réservés.</p>
+            <div style={{ marginTop: '1rem', fontSize: '0.9rem' }}>
+              <a href="#privacy" onClick={(e) => { e.preventDefault(); setLegalView('privacy'); }} style={{ color: 'var(--text-muted)', marginRight: '20px', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--primary-gold)'} onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}>Politique de Confidentialité</a>
+              <a href="#cookies" onClick={(e) => { e.preventDefault(); setLegalView('cookies'); }} style={{ color: 'var(--text-muted)', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--primary-gold)'} onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}>Gestion des Cookies</a>
+            </div>
           </div>
         </div>
       </footer>
+
+      {/* Legal Modal */}
+      {legalView && (
+        <div className="legal-modal-overlay" onClick={() => setLegalView(null)}>
+          <div className="legal-modal-content" onClick={e => e.stopPropagation()}>
+            <button className="legal-modal-close" onClick={() => setLegalView(null)}>✕</button>
+            
+            {legalView === 'privacy' && (
+              <div className="legal-text">
+                <h2 className="legal-title">Politique de Confidentialité</h2>
+                <div className="gold-separator left"></div>
+                
+                <h3>1. Collecte des données</h3>
+                <p>Nous collectons uniquement les informations nécessaires à l'organisation des obsèques et au rapatriement (identité, coordonnées de la famille, documents d'état civil, certificats médicaux) dans le strict respect de la vie privée.</p>
+                
+                <h3>2. Finalité de l'utilisation</h3>
+                <p>Vos données sont exclusivement utilisées pour l'accomplissement des démarches administratives, consulaires et douanières, ainsi que pour l'exécution des prestations convenues lors de la signature du contrat.</p>
+                
+                <h3>3. Protection et Partage</h3>
+                <p>Al Amanah Funérailles s'engage à garantir la confidentialité de vos informations. Celles-ci ne sont communiquées qu'aux autorités compétentes (communes, consulats) et prestataires indispensables (compagnies aériennes, cimetières). En aucun cas vos données ne seront vendues ou cédées pour du démarchage commercial.</p>
+                
+                <h3>4. Durée de conservation</h3>
+                <p>Les données liées aux dossiers d'obsèques sont conservées en toute sécurité conformément aux obligations légales et comptables belges, et de manière confidentielle.</p>
+                
+                <h3>5. Vos droits</h3>
+                <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et d'effacement de vos données personnelles. Vous pouvez exercer ce droit à tout moment en nous contactant à <strong>contact@amana-janaza.com</strong>.</p>
+              </div>
+            )}
+
+            {legalView === 'cookies' && (
+              <div className="legal-text">
+                <h2 className="legal-title">Politique des Cookies</h2>
+                <div className="gold-separator left"></div>
+
+                <h3>Qu'est-ce qu'un cookie ?</h3>
+                <p>Un cookie est un petit fichier texte déposé sur votre appareil (ordinateur, tablette, smartphone) lors de la visite d'un site web. Il permet au site de mémoriser vos actions et préférences pendant une durée donnée.</p>
+
+                <h3>Les cookies que nous utilisons</h3>
+                <p>Dans un souci de transparence et de respect de votre vie privée, le site web <strong>Amana-Janaza</strong> limite au strict minimum l'utilisation des cookies :</p>
+                <ul>
+                  <li><strong>Cookies techniques (Essentiels) :</strong> Ils sont indispensables pour garantir le bon fonctionnement du site, la sécurité de la navigation et la fluidité de l'affichage.</li>
+                  <li><strong>Cookies analytiques (Anonymisés) :</strong> Nous utilisons des outils d'analyse (qui ne vous pistent d'aucune manière individuellement) uniquement pour comprendre combien de visiteurs consultent notre site et améliorer sa structure.</li>
+                </ul>
+
+                <h3>Ce que nous refusons</h3>
+                <p>Nous n'utilisons <strong>aucun cookie publicitaire</strong>, de marketing ciblé ou de reciblage. Votre visite sur notre site à l'occasion d'un événement douloureux ne doit pas et ne sera pas exploitée à des fins commerciales sur d'autres plateformes.</p>
+
+                <h3>Gérer vos préférences</h3>
+                <p>Vous pouvez à tout moment configurer votre navigateur internet pour vous alerter lorsqu'un cookie est déposé, ou simplement pour les bloquer systématiquement. Notez que cela pourrait affecter très légèrement le fonctionnement optimal du site.</p>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
