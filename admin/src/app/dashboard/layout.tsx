@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, Users, Mail, Instagram, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Users, Mail, Instagram, Facebook, Settings, LogOut, Menu, X } from 'lucide-react';
 import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { useRouter } from 'next/navigation';
@@ -12,6 +12,7 @@ const navItems = [
   { icon: Users,           label: 'Collaborateurs',  href: '/dashboard/employes' },
   { icon: Mail,            label: 'Emails',           href: '/dashboard/emails' },
   { icon: Instagram,       label: 'Instagram',        href: '/dashboard/instagram' },
+  { icon: Facebook,        label: 'Facebook',         href: '/dashboard/facebook' },
   { icon: Settings,        label: 'Paramètres',       href: '/dashboard/settings' },
 ];
 
