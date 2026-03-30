@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Outfit:wght@300;400;500;600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,30 +8,85 @@
   --gold: #C9A84C;
   --gold-light: #E2C97E;
   --gold-dark: #A07830;
-  --charcoal: #1A1A1A;
-  --charcoal-light: #2D2D2D;
-  --charcoal-lighter: #3D3D3D;
+  --charcoal: #0d0d0d;
+  --charcoal-light: #1a1a1a;
+  --charcoal-lighter: #2d2d2d;
+  --charcoal-border: #3a3a3a;
 }
 
 * {
   box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
 html, body {
   background-color: var(--charcoal);
-  color: #f5f5f5;
-  font-family: 'Inter', system-ui, sans-serif;
+  color: #f0ece3;
+  font-family: 'Outfit', system-ui, sans-serif;
   min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
 }
 
 /* Scrollbar premium */
-::-webkit-scrollbar {
-  width: 6px;
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: var(--charcoal-light); }
+::-webkit-scrollbar-thumb { background: var(--gold-dark); border-radius: 3px; }
+
+/* Gold separator */
+.gold-line {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
 }
-::-webkit-scrollbar-track {
-  background: var(--charcoal-light);
+
+/* Input style */
+.input-gold {
+  width: 100%;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--charcoal-border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #f0ece3;
+  font-family: 'Outfit', sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.2s, background 0.2s;
+  outline: none;
 }
-::-webkit-scrollbar-thumb {
-  background: var(--gold-dark);
-  border-radius: 3px;
+.input-gold::placeholder { color: #666; }
+.input-gold:focus {
+  border-color: var(--gold);
+  background: rgba(201,168,76,0.06);
 }
+
+/* Button gold */
+.btn-gold {
+  width: 100%;
+  background: linear-gradient(135deg, var(--gold-dark), var(--gold), var(--gold-light));
+  color: #0d0d0d;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  padding: 14px 24px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.15s;
+  background-size: 200%;
+  background-position: left;
+}
+.btn-gold:hover { opacity: 0.9; transform: translateY(-1px); }
+.btn-gold:active { transform: translateY(0); }
+.btn-gold:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+
+/* Fade animations */
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.fade-in-up { animation: fadeInUp 0.6s ease forwards; }
+.delay-1 { animation-delay: 0.1s; opacity: 0; }
+.delay-2 { animation-delay: 0.2s; opacity: 0; }
+.delay-3 { animation-delay: 0.3s; opacity: 0; }
