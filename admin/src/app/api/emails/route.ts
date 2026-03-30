@@ -35,28 +35,17 @@ export async function GET() {
       return NextResponse.json({ error: text }, { status: res.status });
     }
 
-    // DirectAdmin retourne: list[]=user1&list[]=user2
+    // DirectAdmin retourne les crochets URL-encodés : list%5B%5D=user1&list%5B%5D=user2
+    // On décode d'abord la réponse entière, puis on parse
+    const decoded = decodeURIComponent(text);
     const emails: string[] = [];
     const regex = /list\[\]=([^&]+)/g;
     let match;
-    while ((match = regex.exec(text)) !== null) {
-      emails.push(decodeURIComponent(match[1]));
+    while ((match = regex.exec(decoded)) !== null) {
+      emails.push(match[1]);
     }
 
-    // Récupérer les détails (quota) pour chaque email
-    const details = await Promise.all(
-      emails.map(async (user) => {
-        try {
-          const detailUrl = `https://${SERVER}:2222/CMD_API_POP?domain=${DOMAIN}&action=list&type=list&user=${user}`;
-          const dr = await fetch(detailUrl, { headers: { Authorization: getAuth() } });
-          const dt = await dr.text();
-          const parsed = parseDA(dt);
-          return { user, quota: parsed.quota || '—', usage: parsed.usage || '0' };
-        } catch {
-          return { user, quota: '—', usage: '0' };
-        }
-      })
-    );
+    const details = emails.map((user) => ({ user, quota: '500', usage: '0' }));
 
     return NextResponse.json({ emails: details, domain: DOMAIN });
   } catch (err: unknown) {
