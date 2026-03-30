@@ -2,10 +2,10 @@
 import { Users, Mail, Instagram, Clock } from 'lucide-react';
 
 const stats = [
-  { icon: Users,     label: 'Collaborateurs',       value: '—', sub: 'À configurer (Phase 2)', },
-  { icon: Mail,      label: 'Boîtes email MXRoute',  value: '—', sub: 'À connecter', },
-  { icon: Instagram, label: 'Abonnés Instagram',     value: '—', sub: '@alaamanah.be', },
-  { icon: Clock,     label: 'Dernière activité',     value: 'Active', sub: 'Session en cours', color: '#3ecf8e' },
+  { icon: Users,     label: 'Collaborateurs',  value: '—', sub: 'Gérer les collaborateurs' },
+  { icon: Mail,      label: 'Emails',           value: '—', sub: 'amana-janaza.com' },
+  { icon: Instagram, label: 'Abonnés Instagram', value: '—', sub: '@alaamanah.be' },
+  { icon: Clock,     label: 'Dernière activité', value: 'Active', sub: 'Session en cours', color: '#3ecf8e' },
 ];
 
 export default function DashboardPage() {
@@ -53,14 +53,14 @@ export default function DashboardPage() {
         borderRadius: '12px', padding: '24px 28px' }}>
         <p style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.9rem', fontWeight: 600,
           color: 'var(--gold)', marginBottom: '12px' }}>
-          Prochaines étapes
+          Navigation rapide
         </p>
         <ul style={{ listStyle: 'none', color: '#aaa', fontSize: '0.85rem',
           fontFamily: 'Outfit, sans-serif', lineHeight: '2.2' }}>
-          <li>→ Connexion Supabase (base de données employés)</li>
-          <li>→ Authentification Super-Admin sécurisée</li>
-          <li>→ Module gestion des collaborateurs (CRUD)</li>
-          <li>→ Intégration API MXRoute (création emails automatique)</li>
+          <li>→ <a href="/dashboard/employes" style={{ color: '#aaa', textDecoration: 'none' }}>Gérer les collaborateurs</a></li>
+          <li>→ <a href="/dashboard/emails" style={{ color: '#aaa', textDecoration: 'none' }}>Gérer les emails</a></li>
+          <li>→ Instagram (bientôt)</li>
+          <li>→ Paramètres (bientôt)</li>
         </ul>
       </div>
     </div>
