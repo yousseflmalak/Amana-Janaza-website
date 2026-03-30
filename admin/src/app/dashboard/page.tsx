@@ -1,3 +1,4 @@
+'use client';
 import { Users, Mail, Instagram, Clock } from 'lucide-react';
 
 const stats = [
