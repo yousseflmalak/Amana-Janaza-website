@@ -30,7 +30,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         flexDirection: 'column',
         transform: sidebarOpen ? 'translateX(0)' : 'translateX(-100%)',
         transition: 'transform 0.25s cubic-bezier(0.4,0,0.2,1)',
-      }} className="lg:translate-x-0 lg:static lg:transform-none">
+      }} className="md:translate-x-0 md:static md:transform-none">
 
         {/* Logo */}
         <div style={{ padding: '24px 20px 16px', borderBottom: '1px solid #1a1a1a',
@@ -40,7 +40,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
               alt="Al Amanah" width={100} height={48}
               style={{ objectFit: 'contain' }} priority />
           </Link>
-          <button onClick={() => setSidebarOpen(false)} className="lg:hidden"
+          <button onClick={() => setSidebarOpen(false)} className="md:hidden"
             style={{ color: '#555', background: 'none', border: 'none', cursor: 'pointer' }}>
             <X size={18} />
           </button>
@@ -93,13 +93,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
       {/* MAIN */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}
-           className="lg:ml-[248px]">
+           className="md:ml-[248px]">
         {/* HEADER */}
         <header style={{ height: '56px', flexShrink: 0, background: 'rgba(10,10,10,0.95)',
           borderBottom: '1px solid #1a1a1a', display: 'flex', alignItems: 'center',
           padding: '0 20px', gap: '12px', position: 'sticky', top: 0, zIndex: 20,
           backdropFilter: 'blur(12px)' }}>
-          <button onClick={() => setSidebarOpen(true)} className="lg:hidden"
+          <button onClick={() => setSidebarOpen(true)} className="md:hidden"
             style={{ background: 'none', border: 'none', color: '#777', cursor: 'pointer' }}>
             <Menu size={20} />
           </button>
