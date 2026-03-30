@@ -9,29 +9,12 @@ const DOMAIN = 'amana-janaza.com';
 const WEBMAIL = 'https://mail.amana-janaza.com';
 
 function openWebmail(user: string, password: string) {
-  // Roundcube auto-login via POST form (new tab)
-  const form = document.createElement('form');
-  form.method = 'POST';
-  form.action = WEBMAIL + '/';
-  form.target = '_blank';
-  form.style.display = 'none';
-
-  const fields: Record<string, string> = {
-    _user: `${user}@${DOMAIN}`,
-    _pass: password,
-    _action: 'login',
-    _task: 'login',
-  };
-  for (const [name, value] of Object.entries(fields)) {
-    const input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = name;
-    input.value = value;
-    form.appendChild(input);
-  }
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(() => document.body.removeChild(form), 1000);
+  // Roundcube bloque les POST externes (CSRF).
+  // Solution : copier le mdp dans le presse-papiers + ouvrir le webmail
+  // L'utilisateur n'a qu'à coller avec Ctrl+V / Cmd+V
+  navigator.clipboard.writeText(password).catch(() => {});
+  const url = `${WEBMAIL}/?_user=${encodeURIComponent(`${user}@${DOMAIN}`)}`;
+  window.open(url, '_blank');
 }
 
 export default function EmailsPage() {
@@ -407,7 +390,7 @@ export default function EmailsPage() {
               </p>
             </div>
             <p style={{ fontSize: '0.78rem', color: '#555', fontFamily: 'Outfit, sans-serif', marginBottom: '24px' }}>
-              ⚠️ Notez ce mot de passe — il ne sera plus affiché après fermeture.
+              ⚠️ Notez ce mot de passe, il ne sera plus affiché. En cliquant "Ouvrir le webmail", il sera copié automatiquement dans votre presse-papiers.
             </p>
 
             <div style={{ display: 'flex', gap: '12px' }}>
@@ -421,7 +404,7 @@ export default function EmailsPage() {
                   gap: '8px', background: 'linear-gradient(135deg, #A07830, #C9A84C)', border: 'none',
                   borderRadius: '8px', color: '#0d0d0d', cursor: 'pointer',
                   fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem', fontWeight: 600 }}>
-                <ExternalLink size={14} /> Se connecter au webmail
+                <ExternalLink size={14} /> Copier mdp &amp; ouvrir webmail
               </button>
             </div>
           </div>
