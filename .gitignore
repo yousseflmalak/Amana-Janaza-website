@@ -25,3 +25,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Fichiers sensibles — NE JAMAIS pusher sur GitHub
+MXROUTE_KEYS_MEMO.txt
+MEMO_POUR_LA_SUITE_ERP.txt
+*.env
+.env*
+admin/.env.local
