@@ -1,20 +1,55 @@
 'use client';
 import { useState, useEffect, useCallback } from 'react';
-import { Mail, Plus, Trash2, RefreshCw, Copy, Check } from 'lucide-react';
+import { Mail, Plus, Trash2, RefreshCw, Copy, Check, KeyRound, ExternalLink } from 'lucide-react';
 
 type EmailAccount = { user: string; quota: string; usage: string };
+type ResetState = { user: string; newPassword: string } | null;
 
 const DOMAIN = 'amana-janaza.com';
+const WEBMAIL = 'https://mail.amana-janaza.com';
+
+function openWebmail(user: string, password: string) {
+  // Roundcube auto-login via POST form (new tab)
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = WEBMAIL + '/';
+  form.target = '_blank';
+  form.style.display = 'none';
+
+  const fields: Record<string, string> = {
+    _user: `${user}@${DOMAIN}`,
+    _pass: password,
+    _action: 'login',
+    _task: 'login',
+  };
+  for (const [name, value] of Object.entries(fields)) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    form.appendChild(input);
+  }
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(() => document.body.removeChild(form), 1000);
+}
 
 export default function EmailsPage() {
-  const [emails, setEmails]       = useState<EmailAccount[]>([]);
-  const [loading, setLoading]     = useState(true);
-  const [error, setError]         = useState('');
-  const [showForm, setShowForm]   = useState(false);
-  const [saving, setSaving]       = useState(false);
-  const [copied, setCopied]       = useState<string | null>(null);
-  const [form, setForm]           = useState({ user: '', password: '', quota: '500' });
-  const [formError, setFormError] = useState('');
+  const [emails, setEmails]         = useState<EmailAccount[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [error, setError]           = useState('');
+  const [showCreate, setShowCreate] = useState(false);
+  const [saving, setSaving]         = useState(false);
+  const [copied, setCopied]         = useState<string | null>(null);
+  const [form, setForm]             = useState({ user: '', password: '', quota: '500' });
+  const [formError, setFormError]   = useState('');
+
+  // Reset password modal
+  const [resetTarget, setResetTarget]   = useState<string | null>(null);
+  const [resetPwd, setResetPwd]         = useState('');
+  const [resetSaving, setResetSaving]   = useState(false);
+  const [resetError, setResetError]     = useState('');
+  const [resetDone, setResetDone]       = useState<ResetState>(null);
 
   const fetchEmails = useCallback(async () => {
     setLoading(true); setError('');
@@ -25,9 +60,7 @@ export default function EmailsPage() {
       setEmails(data.emails || []);
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Erreur inconnue');
-    } finally {
-      setLoading(false);
-    }
+    } finally { setLoading(false); }
   }, []);
 
   useEffect(() => { fetchEmails(); }, [fetchEmails]);
@@ -47,7 +80,9 @@ export default function EmailsPage() {
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Erreur création');
-      setShowForm(false);
+      // After creation, show webmail login option
+      setResetDone({ user: form.user.trim(), newPassword: form.password });
+      setShowCreate(false);
       setForm({ user: '', password: '', quota: '500' });
       fetchEmails();
     } catch (e: unknown) {
@@ -66,9 +101,26 @@ export default function EmailsPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error);
       fetchEmails();
+    } catch (e: unknown) { alert(e instanceof Error ? e.message : 'Erreur suppression'); }
+  };
+
+  const handleResetPassword = async () => {
+    if (!resetTarget) return;
+    if (!resetPwd || resetPwd.length < 8) { setResetError('8 caractères minimum.'); return; }
+    setResetSaving(true); setResetError('');
+    try {
+      const res = await fetch('/api/emails', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: 'change_password', user: resetTarget, password: resetPwd }),
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || 'Erreur réinitialisation');
+      setResetDone({ user: resetTarget, newPassword: resetPwd });
+      setResetTarget(null); setResetPwd('');
     } catch (e: unknown) {
-      alert(e instanceof Error ? e.message : 'Erreur suppression');
-    }
+      setResetError(e instanceof Error ? e.message : 'Erreur');
+    } finally { setResetSaving(false); }
   };
 
   const copyEmail = (user: string) => {
@@ -86,6 +138,11 @@ export default function EmailsPage() {
     display: 'block', fontSize: '0.75rem', color: '#888', marginBottom: '6px',
     textTransform: 'uppercase' as const, letterSpacing: '0.06em', fontFamily: 'Outfit, sans-serif',
   };
+  const btnBase = {
+    background: 'none', border: '1px solid #333', borderRadius: '6px',
+    padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center',
+    color: '#888', transition: 'all 0.15s',
+  };
 
   return (
     <div>
@@ -93,9 +150,7 @@ export default function EmailsPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '28px' }}>
         <div>
           <h2 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.4rem', fontWeight: 600,
-            color: '#f0ece3', marginBottom: '4px' }}>
-            Emails MXRoute
-          </h2>
+            color: '#f0ece3', marginBottom: '4px' }}>Emails</h2>
           <p style={{ color: '#888', fontSize: '0.85rem', fontFamily: 'Outfit, sans-serif' }}>
             Domaine : <span style={{ color: 'var(--gold)' }}>{DOMAIN}</span>
             {' · '}{emails.length} compte{emails.length !== 1 ? 's' : ''}
@@ -105,14 +160,13 @@ export default function EmailsPage() {
           <button onClick={fetchEmails} disabled={loading}
             style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '10px 14px',
               background: 'transparent', border: '1px solid #333', borderRadius: '8px',
-              color: '#888', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem',
-              transition: 'all 0.15s' }}
+              color: '#888', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem' }}
             onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#555')}
             onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#333')}>
-            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
+            <RefreshCw size={14} />
             Actualiser
           </button>
-          <button onClick={() => { setShowForm(true); setFormError(''); }}
+          <button onClick={() => { setShowCreate(true); setFormError(''); }}
             style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 18px',
               background: 'linear-gradient(135deg, #A07830, #C9A84C)', color: '#0d0d0d',
               border: 'none', borderRadius: '8px', cursor: 'pointer',
@@ -123,7 +177,6 @@ export default function EmailsPage() {
       </div>
       <div className="gold-line" style={{ marginBottom: '28px' }} />
 
-      {/* Erreur globale */}
       {error && (
         <div style={{ background: 'rgba(224,80,80,0.08)', border: '1px solid rgba(224,80,80,0.25)',
           borderRadius: '10px', padding: '16px 20px', marginBottom: '24px',
@@ -132,10 +185,9 @@ export default function EmailsPage() {
         </div>
       )}
 
-      {/* Tableau */}
+      {/* Table */}
       {loading ? (
-        <div style={{ textAlign: 'center', padding: '60px 0', color: '#555',
-          fontFamily: 'Outfit, sans-serif' }}>
+        <div style={{ textAlign: 'center', padding: '60px 0', color: '#555', fontFamily: 'Outfit, sans-serif' }}>
           <RefreshCw size={24} style={{ margin: '0 auto 12px', display: 'block', opacity: 0.4 }} />
           Connexion à MXRoute…
         </div>
@@ -143,17 +195,16 @@ export default function EmailsPage() {
         <div style={{ textAlign: 'center', padding: '60px 0', color: '#444',
           fontFamily: 'Outfit, sans-serif', fontSize: '0.9rem' }}>
           <Mail size={32} style={{ margin: '0 auto 16px', display: 'block', opacity: 0.3 }} />
-          Aucun compte email. Créez le premier.
+          Aucun compte email.
         </div>
       ) : (
         <div style={{ overflowX: 'auto' }}>
           <table style={{ width: '100%', borderCollapse: 'collapse', fontFamily: 'Outfit, sans-serif' }}>
             <thead>
               <tr style={{ borderBottom: '1px solid #222' }}>
-                {['Adresse email', 'Quota (Mo)', 'Utilisation', 'Actions'].map(h => (
-                  <th key={h} style={{ padding: '10px 12px', textAlign: 'left',
-                    fontSize: '0.72rem', color: '#666', textTransform: 'uppercase',
-                    letterSpacing: '0.08em', fontWeight: 500 }}>{h}</th>
+                {['Adresse email', 'Quota', 'Utilisation', 'Actions'].map(h => (
+                  <th key={h} style={{ padding: '10px 12px', textAlign: 'left', fontSize: '0.72rem',
+                    color: '#666', textTransform: 'uppercase', letterSpacing: '0.08em', fontWeight: 500 }}>{h}</th>
                 ))}
               </tr>
             </thead>
@@ -168,11 +219,9 @@ export default function EmailsPage() {
                         borderRadius: '6px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <Mail size={14} color="var(--gold)" strokeWidth={1.8} />
                       </div>
-                      <div>
-                        <p style={{ color: '#f0ece3', fontSize: '0.875rem', fontWeight: 500 }}>
-                          {acc.user}@{DOMAIN}
-                        </p>
-                      </div>
+                      <p style={{ color: '#f0ece3', fontSize: '0.875rem', fontWeight: 500 }}>
+                        {acc.user}@{DOMAIN}
+                      </p>
                     </div>
                   </td>
                   <td style={{ padding: '14px 12px', color: '#ccc', fontSize: '0.85rem' }}>
@@ -182,21 +231,33 @@ export default function EmailsPage() {
                     {acc.usage !== '0' ? `${acc.usage} Mo` : '< 1 Mo'}
                   </td>
                   <td style={{ padding: '14px 12px' }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <button onClick={() => copyEmail(acc.user)}
-                        title="Copier l'adresse"
-                        style={{ background: 'none', border: '1px solid #333', borderRadius: '6px',
-                          padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center',
-                          color: copied === acc.user ? '#3ecf8e' : '#888', transition: 'all 0.15s' }}
+                    <div style={{ display: 'flex', gap: '6px' }}>
+                      {/* Copier */}
+                      <button onClick={() => copyEmail(acc.user)} title="Copier l'adresse"
+                        style={{ ...btnBase, color: copied === acc.user ? '#3ecf8e' : '#888' }}
                         onMouseEnter={(e) => (e.currentTarget.style.borderColor = '#555')}
                         onMouseLeave={(e) => (e.currentTarget.style.borderColor = '#333')}>
                         {copied === acc.user ? <Check size={13} /> : <Copy size={13} />}
                       </button>
-                      <button onClick={() => handleDelete(acc.user)}
-                        title="Supprimer"
-                        style={{ background: 'none', border: '1px solid #333', borderRadius: '6px',
-                          padding: '6px 8px', cursor: 'pointer', display: 'flex', alignItems: 'center',
-                          color: '#888', transition: 'all 0.15s' }}
+                      {/* Reset mot de passe */}
+                      <button onClick={() => { setResetTarget(acc.user); setResetPwd(''); setResetError(''); }}
+                        title="Réinitialiser le mot de passe"
+                        style={btnBase}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#C9A84C'; e.currentTarget.style.color = '#C9A84C'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#888'; }}>
+                        <KeyRound size={13} />
+                      </button>
+                      {/* Webmail sans mdp connu — ouvre juste l'URL */}
+                      <button onClick={() => window.open(`${WEBMAIL}/?_user=${acc.user}%40${DOMAIN}`, '_blank')}
+                        title="Ouvrir le webmail"
+                        style={btnBase}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#7dd3fc'; e.currentTarget.style.color = '#7dd3fc'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#888'; }}>
+                        <ExternalLink size={13} />
+                      </button>
+                      {/* Supprimer */}
+                      <button onClick={() => handleDelete(acc.user)} title="Supprimer"
+                        style={btnBase}
                         onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#e05050'; e.currentTarget.style.color = '#e05050'; }}
                         onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#333'; e.currentTarget.style.color = '#888'; }}>
                         <Trash2 size={13} />
@@ -210,49 +271,43 @@ export default function EmailsPage() {
         </div>
       )}
 
-      {/* Modal Création */}
-      {showForm && (
+      {/* ─── Modal : Créer un email ─────────────────────── */}
+      {showCreate && (
         <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.75)',
           display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
           <div style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: '14px',
-            padding: '32px', width: '100%', maxWidth: '440px',
-            boxShadow: '0 24px 64px rgba(0,0,0,0.8)' }}>
-            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.1rem', fontWeight: 600,
-              color: '#f0ece3', marginBottom: '4px' }}>
+            padding: '32px', width: '100%', maxWidth: '440px', boxShadow: '0 24px 64px rgba(0,0,0,0.8)' }}>
+            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.1rem', fontWeight: 600, color: '#f0ece3', marginBottom: '4px' }}>
               Nouveau compte email
             </h3>
-            <p style={{ color: '#666', fontSize: '0.8rem', fontFamily: 'Outfit, sans-serif', marginBottom: '0' }}>
-              Le compte sera créé sur @{DOMAIN}
+            <p style={{ color: '#666', fontSize: '0.8rem', fontFamily: 'Outfit, sans-serif' }}>
+              Sera créé sur @{DOMAIN}
             </p>
             <div className="gold-line" style={{ margin: '16px 0 24px' }} />
 
             <div style={{ marginBottom: '16px' }}>
               <label style={labelStyle}>Nom du compte</label>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0', border: '1px solid #333',
-                borderRadius: '7px', overflow: 'hidden', background: 'rgba(255,255,255,0.05)' }}>
+              <div style={{ display: 'flex', border: '1px solid #333', borderRadius: '7px',
+                overflow: 'hidden', background: 'rgba(255,255,255,0.05)' }}>
                 <input style={{ ...inputStyle, border: 'none', background: 'transparent', flex: 1 }}
                   placeholder="prenom.nom"
                   value={form.user}
                   onChange={(e) => setForm({ ...form, user: e.target.value.toLowerCase().replace(/[^a-z0-9._-]/g, '') })} />
                 <span style={{ padding: '0 12px', color: '#555', fontSize: '0.85rem',
-                  fontFamily: 'Outfit, sans-serif', whiteSpace: 'nowrap' }}>
+                  fontFamily: 'Outfit, sans-serif', whiteSpace: 'nowrap', display: 'flex', alignItems: 'center' }}>
                   @{DOMAIN}
                 </span>
               </div>
             </div>
-
             <div style={{ marginBottom: '16px' }}>
               <label style={labelStyle}>Mot de passe</label>
               <input type="password" style={inputStyle} placeholder="Min. 8 caractères"
-                value={form.password}
-                onChange={(e) => setForm({ ...form, password: e.target.value })} />
+                value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
             </div>
-
             <div style={{ marginBottom: '24px' }}>
-              <label style={labelStyle}>Quota (Mo)</label>
+              <label style={labelStyle}>Quota</label>
               <select style={{ ...inputStyle, cursor: 'pointer' }}
-                value={form.quota}
-                onChange={(e) => setForm({ ...form, quota: e.target.value })}>
+                value={form.quota} onChange={(e) => setForm({ ...form, quota: e.target.value })}>
                 <option value="250" style={{ background: '#111' }}>250 Mo</option>
                 <option value="500" style={{ background: '#111' }}>500 Mo (défaut)</option>
                 <option value="1000" style={{ background: '#111' }}>1 Go</option>
@@ -261,25 +316,112 @@ export default function EmailsPage() {
               </select>
             </div>
 
-            {formError && (
-              <p style={{ color: '#e05050', fontSize: '0.82rem', marginBottom: '16px',
-                fontFamily: 'Outfit, sans-serif' }}>{formError}</p>
-            )}
+            {formError && <p style={{ color: '#e05050', fontSize: '0.82rem', marginBottom: '16px', fontFamily: 'Outfit, sans-serif' }}>{formError}</p>}
 
             <div style={{ display: 'flex', gap: '12px' }}>
-              <button onClick={() => setShowForm(false)}
-                style={{ flex: 1, padding: '11px', background: 'transparent',
-                  border: '1px solid #333', borderRadius: '8px', color: '#888',
-                  cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem' }}>
+              <button onClick={() => setShowCreate(false)}
+                style={{ flex: 1, padding: '11px', background: 'transparent', border: '1px solid #333',
+                  borderRadius: '8px', color: '#888', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem' }}>
                 Annuler
               </button>
               <button onClick={handleCreate} disabled={saving}
-                style={{ flex: 1, padding: '11px',
-                  background: 'linear-gradient(135deg, #A07830, #C9A84C)', border: 'none',
-                  borderRadius: '8px', color: '#0d0d0d', cursor: 'pointer',
-                  fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem', fontWeight: 600,
-                  opacity: saving ? 0.7 : 1 }}>
+                style={{ flex: 1, padding: '11px', background: 'linear-gradient(135deg, #A07830, #C9A84C)',
+                  border: 'none', borderRadius: '8px', color: '#0d0d0d', cursor: 'pointer',
+                  fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem', fontWeight: 600, opacity: saving ? 0.7 : 1 }}>
                 {saving ? 'Création…' : 'Créer le compte'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Modal : Réinitialiser le mot de passe ─────── */}
+      {resetTarget && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.75)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: '14px',
+            padding: '32px', width: '100%', maxWidth: '420px', boxShadow: '0 24px 64px rgba(0,0,0,0.8)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
+              <KeyRound size={18} color="var(--gold)" />
+              <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.05rem', fontWeight: 600, color: '#f0ece3' }}>
+                Réinitialiser le mot de passe
+              </h3>
+            </div>
+            <p style={{ color: '#666', fontSize: '0.82rem', fontFamily: 'Outfit, sans-serif' }}>
+              {resetTarget}@{DOMAIN}
+            </p>
+            <div className="gold-line" style={{ margin: '16px 0 24px' }} />
+
+            <div style={{ marginBottom: '24px' }}>
+              <label style={labelStyle}>Nouveau mot de passe</label>
+              <input type="password" style={inputStyle} placeholder="Min. 8 caractères"
+                value={resetPwd} onChange={(e) => setResetPwd(e.target.value)} autoFocus />
+            </div>
+
+            {resetError && <p style={{ color: '#e05050', fontSize: '0.82rem', marginBottom: '16px', fontFamily: 'Outfit, sans-serif' }}>{resetError}</p>}
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={() => { setResetTarget(null); setResetPwd(''); }}
+                style={{ flex: 1, padding: '11px', background: 'transparent', border: '1px solid #333',
+                  borderRadius: '8px', color: '#888', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem' }}>
+                Annuler
+              </button>
+              <button onClick={handleResetPassword} disabled={resetSaving}
+                style={{ flex: 1, padding: '11px', background: 'linear-gradient(135deg, #A07830, #C9A84C)',
+                  border: 'none', borderRadius: '8px', color: '#0d0d0d', cursor: 'pointer',
+                  fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem', fontWeight: 600, opacity: resetSaving ? 0.7 : 1 }}>
+                {resetSaving ? 'Enregistrement…' : 'Changer le mot de passe'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ─── Modal : Succès + Connexion Webmail ────────── */}
+      {resetDone && (
+        <div style={{ position: 'fixed', inset: 0, zIndex: 50, background: 'rgba(0,0,0,0.75)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
+          <div style={{ background: '#111', border: '1px solid #2a2a2a', borderRadius: '14px',
+            padding: '32px', width: '100%', maxWidth: '420px', boxShadow: '0 24px 64px rgba(0,0,0,0.8)' }}>
+            <div style={{ width: '44px', height: '44px', background: 'rgba(62,207,142,0.1)',
+              borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center',
+              margin: '0 0 16px' }}>
+              <Check size={22} color="#3ecf8e" />
+            </div>
+            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '1.05rem', fontWeight: 600, color: '#f0ece3', marginBottom: '8px' }}>
+              Mot de passe mis à jour
+            </h3>
+
+            <div style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid #2a2a2a',
+              borderRadius: '8px', padding: '14px 16px', marginTop: '20px', marginBottom: '12px' }}>
+              <p style={{ fontSize: '0.72rem', color: '#666', fontFamily: 'Outfit, sans-serif',
+                textTransform: 'uppercase', letterSpacing: '0.07em', marginBottom: '6px' }}>Identifiants webmail</p>
+              <p style={{ color: '#f0ece3', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem', marginBottom: '2px' }}>
+                <span style={{ color: '#888' }}>Email : </span>{resetDone.user}@{DOMAIN}
+              </p>
+              <p style={{ color: '#f0ece3', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem' }}>
+                <span style={{ color: '#888' }}>Mdp : </span>
+                <span style={{ fontFamily: 'monospace', color: 'var(--gold)', letterSpacing: '0.05em' }}>
+                  {resetDone.newPassword}
+                </span>
+              </p>
+            </div>
+            <p style={{ fontSize: '0.78rem', color: '#555', fontFamily: 'Outfit, sans-serif', marginBottom: '24px' }}>
+              ⚠️ Notez ce mot de passe — il ne sera plus affiché après fermeture.
+            </p>
+
+            <div style={{ display: 'flex', gap: '12px' }}>
+              <button onClick={() => setResetDone(null)}
+                style={{ flex: 1, padding: '11px', background: 'transparent', border: '1px solid #333',
+                  borderRadius: '8px', color: '#888', cursor: 'pointer', fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem' }}>
+                Fermer
+              </button>
+              <button onClick={() => { openWebmail(resetDone.user, resetDone.newPassword); setResetDone(null); }}
+                style={{ flex: 1, padding: '11px', display: 'flex', alignItems: 'center', justifyContent: 'center',
+                  gap: '8px', background: 'linear-gradient(135deg, #A07830, #C9A84C)', border: 'none',
+                  borderRadius: '8px', color: '#0d0d0d', cursor: 'pointer',
+                  fontFamily: 'Outfit, sans-serif', fontSize: '0.875rem', fontWeight: 600 }}>
+                <ExternalLink size={14} /> Se connecter au webmail
               </button>
             </div>
           </div>

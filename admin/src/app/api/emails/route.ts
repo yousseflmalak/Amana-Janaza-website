@@ -83,6 +83,16 @@ export async function POST(req: NextRequest) {
         user,
         select0: user,
       });
+    } else if (action === 'change_password') {
+      if (!password) return NextResponse.json({ error: 'Nouveau mot de passe requis' }, { status: 400 });
+      params = new URLSearchParams({
+        action: 'modify',
+        domain: DOMAIN,
+        user,
+        passwd: password,
+        passwd2: password,
+        quota: quota || '500',
+      });
     } else {
       return NextResponse.json({ error: 'Action invalide' }, { status: 400 });
     }
