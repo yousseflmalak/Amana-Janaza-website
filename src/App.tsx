@@ -133,13 +133,54 @@ function App() {
               <h4>Navigation</h4>
               <a href="#services">Nos Services</a>
               <a href="#rapatriement">Rapatriement</a>
-              <a href="#contact">Contact</a>
             </div>
-            <div className="footer-contact">
+            <div className="footer-contact" id="contact">
               <h4>Contactez-nous (24/7)</h4>
               <p>📍 Bruxelles, Belgique</p>
               <p>📞 +32 (0) 4XX XX XX XX</p>
-              <p>✉️ contact@amana-janaza.com</p>
+              <p>✉️ <a href="mailto:contact@amana-janaza.com" style={{color: 'inherit', textDecoration: 'none'}}>contact@amana-janaza.com</a></p>
+            </div>
+            <div className="footer-social">
+              <h4>Suivez-nous</h4>
+              <a
+                href="https://www.instagram.com/alaamanah.be"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="instagram-link"
+                aria-label="Suivez Amana-Janaza sur Instagram"
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <defs>
+                    <linearGradient id="ig-grad" x1="0%" y1="100%" x2="100%" y2="0%">
+                      <stop offset="0%" stopColor="#feda75" />
+                      <stop offset="25%" stopColor="#fa7e1e" />
+                      <stop offset="50%" stopColor="#d62976" />
+                      <stop offset="75%" stopColor="#962fbf" />
+                      <stop offset="100%" stopColor="#4f5bd5" />
+                    </linearGradient>
+                  </defs>
+                  <rect x="2" y="2" width="20" height="20" rx="5" fill="url(#ig-grad)"/>
+                  <rect x="6" y="6" width="12" height="12" rx="3" fill="none" stroke="white" strokeWidth="2"/>
+                  <circle cx="12" cy="12" r="3" fill="none" stroke="white" strokeWidth="2"/>
+                  <circle cx="16.5" cy="7.5" r="1.1" fill="white"/>
+                </svg>
+                <span>@alaamanah.be</span>
+              </a>
+              <a
+                href="https://www.facebook.com/amana.janaza.brussels"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="instagram-link"
+                aria-label="Suivez Amana-Janaza sur Facebook"
+                style={{marginTop: '10px'}}
+              >
+                <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="2" y="2" width="20" height="20" rx="5" fill="#1877F2"/>
+                  <path d="M13.5 8H12C11.4 8 11 8.4 11 9v2H9v2.5h2V19h2.5v-5.5H14l.5-2.5h-2V9.5c0-.3.2-.5.5-.5h1V8z" fill="white"/>
+                </svg>
+                <span>Amana Janaza</span>
+              </a>
+              <p className="social-desc">Conseils, informations et actualités sur les rites funéraires islamiques.</p>
             </div>
           </div>
           <div className="footer-bottom">
