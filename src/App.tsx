@@ -120,6 +120,50 @@ function App() {
             </div>
           </div>
         </section>
+
+        <section id="valeurs" className="section bg-dark">
+          <div className="container">
+            <div className="section-header">
+              <h2 className="section-title">Nos Valeurs</h2>
+              <div className="gold-separator"></div>
+              <p className="section-subtitle">
+                Notre mission est guidée par des principes fondamentaux ancrés dans notre foi et notre éthique professionnelle.
+              </p>
+            </div>
+            
+            <div className="services-grid">
+              <div className="service-card reveal">
+                <div className="service-icon-wrapper">
+                  <div className="service-icon">🤝</div>
+                </div>
+                <h3 className="service-title">Dignité & Respect</h3>
+                <p className="service-desc">
+                  Chaque défunt est traité avec le plus profond respect, la plus grande douceur et une pudeur absolue, comme le recommande la tradition prophétique.
+                </p>
+              </div>
+              
+              <div className="service-card reveal" style={{animationDelay: '0.1s'}}>
+                <div className="service-icon-wrapper">
+                  <div className="service-icon">⚖️</div>
+                </div>
+                <h3 className="service-title">Transparence & Intégrité</h3>
+                <p className="service-desc">
+                  Nous privilégions une communication claire et honnête avec les familles, sans coûts cachés ni mauvaises surprises, dans un esprit de totale confiance.
+                </p>
+              </div>
+              
+              <div className="service-card reveal" style={{animationDelay: '0.2s'}}>
+                <div className="service-icon-wrapper">
+                  <div className="service-icon">🕋</div>
+                </div>
+                <h3 className="service-title">Conformité à la Sunna</h3>
+                <p className="service-desc">
+                  L'intégralité de nos rites (lavage, linceul, prière, inhumation) est exécutée en stricte conformité avec le Coran et la Sunna authentique.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
 
       <footer className="footer">
@@ -133,6 +177,7 @@ function App() {
               <h4>Navigation</h4>
               <a href="#services">Nos Services</a>
               <a href="#rapatriement">Rapatriement</a>
+              <a href="#valeurs">Nos Valeurs</a>
             </div>
             <div className="footer-contact" id="contact">
               <h4>Contactez-nous (24/7)</h4>
