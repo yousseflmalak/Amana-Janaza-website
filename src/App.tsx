@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 function App() {
   const [scrolled, setScrolled] = useState(false);
   const [legalView, setLegalView] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -16,16 +17,34 @@ function App() {
     <div className="app-wrapper">
       <header className={`header ${scrolled ? 'scrolled' : ''}`}>
         <div className="container header-content">
-          <a href="#" className="logo">
+          <a href="#" className="logo" onClick={() => setMenuOpen(false)}>
             <img src="/assets/logo-dark-moon.png" alt="Al Amanah Funérailles" className="logo-img" />
           </a>
+          {/* Desktop nav */}
           <nav className="nav-links">
             <a href="#services" className="nav-link">Nos Services</a>
             <a href="#rapatriement" className="nav-link">Rapatriement</a>
             <a href="#valeurs" className="nav-link">Nos Valeurs</a>
             <a href="#contact" className="nav-link contact-btn">Urgence 24/7</a>
           </nav>
+          {/* Hamburger button — mobile only */}
+          <button
+            className={`hamburger ${menuOpen ? 'open' : ''}`}
+            onClick={() => setMenuOpen(!menuOpen)}
+            aria-label="Menu"
+          >
+            <span /><span /><span />
+          </button>
         </div>
+        {/* Mobile menu overlay */}
+        {menuOpen && (
+          <div className="mobile-menu">
+            <a href="#services" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Nos Services</a>
+            <a href="#rapatriement" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Rapatriement</a>
+            <a href="#valeurs" className="mobile-nav-link" onClick={() => setMenuOpen(false)}>Nos Valeurs</a>
+            <a href="#contact" className="mobile-nav-link mobile-contact-btn" onClick={() => setMenuOpen(false)}>Urgence 24/7</a>
+          </div>
+        )}
       </header>
 
       <main>

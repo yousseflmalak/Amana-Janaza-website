@@ -545,6 +545,81 @@ a {
   margin: 0;
 }
 
+/* Hamburger button — hidden on desktop */
+.hamburger {
+  display: none;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+  width: 40px;
+  height: 40px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  cursor: pointer;
+  padding: 8px;
+  transition: border-color 0.3s;
+}
+
+.hamburger span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--text-main);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+.hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.hamburger:hover { border-color: var(--primary-gold); }
+.hamburger:hover span { background: var(--primary-gold); }
+
+/* Mobile menu dropdown */
+.mobile-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  background: rgba(8, 8, 8, 0.98);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--border-color);
+  padding: 1.5rem 0 2rem;
+  animation: fadeInUp 0.25s ease;
+}
+
+.mobile-nav-link {
+  width: 100%;
+  text-align: center;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-main);
+  border-bottom: 1px solid rgba(198, 163, 84, 0.08);
+  transition: color 0.3s, background 0.3s;
+}
+
+.mobile-nav-link:hover { color: var(--primary-gold); background: rgba(198, 163, 84, 0.04); }
+
+.mobile-contact-btn {
+  margin-top: 1rem;
+  color: var(--primary-gold) !important;
+  border: 1px solid var(--primary-gold) !important;
+  border-radius: 2px;
+  width: auto !important;
+  padding: 0.75rem 2.5rem !important;
+}
+
+.mobile-contact-btn:hover {
+  background: var(--primary-gold) !important;
+  color: var(--bg-black) !important;
+}
+
 @media (max-width: 900px) {
   .rapatriement-content {
     grid-template-columns: 1fr;
@@ -557,6 +632,9 @@ a {
   .hero-title {
     font-size: 2.5rem;
   }
+  /* Show hamburger, hide desktop nav */
+  .hamburger { display: flex; }
+  .nav-links { display: none; }
 }
 
 @media (max-width: 600px) {
