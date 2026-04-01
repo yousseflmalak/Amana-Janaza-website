@@ -5,7 +5,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: 'https',
-        hostname: 'www.amana-janaza.com',
+        hostname: 'www.al-amanah-janaza.com',
         pathname: '/assets/**',
       },
     ],

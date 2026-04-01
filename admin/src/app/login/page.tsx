@@ -48,7 +48,7 @@ export default function LoginPage() {
       }}>
         <div className="flex flex-col items-center mb-8 delay-1 fade-in-up">
           <Image
-            src="https://www.amana-janaza.com/assets/logo-dark-moon.png"
+            src="https://www.al-amanah-janaza.com/assets/logo-dark-moon.png"
             alt="Al Amanah Funérailles"
             width={160} height={80}
             style={{ objectFit: 'contain', marginBottom: '20px' }}
@@ -69,7 +69,7 @@ export default function LoginPage() {
               Adresse Email
             </label>
             <input id="email" type="email" className="input-gold"
-              placeholder="admin@amana-janaza.com"
+              placeholder="admin@al-amanah-janaza.com"
               value={email} onChange={(e) => setEmail(e.target.value)}
               required autoComplete="email" />
           </div>

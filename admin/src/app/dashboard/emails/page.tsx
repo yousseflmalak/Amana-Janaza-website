@@ -5,8 +5,8 @@ import { Mail, Plus, Trash2, RefreshCw, Copy, Check, KeyRound, ExternalLink } fr
 type EmailAccount = { user: string; quota: string; usage: string };
 type ResetState = { user: string; newPassword: string } | null;
 
-const DOMAIN = 'amana-janaza.com';
-const WEBMAIL = 'https://mail.amana-janaza.com';
+const DOMAIN = 'al-amanah-janaza.com';
+const WEBMAIL = 'https://mail.al-amanah-janaza.com';
 
 function openWebmail(user: string, password: string) {
   // Roundcube bloque les POST externes (CSRF).

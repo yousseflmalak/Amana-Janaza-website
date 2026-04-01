@@ -72,7 +72,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         <div style={{ padding: '24px 20px 16px', borderBottom: '1px solid #1a1a1a',
           display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
           <Link href="/dashboard">
-            <Image src="https://www.amana-janaza.com/assets/logo-dark-moon.png"
+            <Image src="https://www.al-amanah-janaza.com/assets/logo-dark-moon.png"
               alt="Al Amanah" width={100} height={48}
               style={{ objectFit: 'contain' }} priority />
           </Link>

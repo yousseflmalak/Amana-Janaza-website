@@ -184,7 +184,7 @@ function App() {
               <h4>Contactez-nous (24/7)</h4>
               <p>📍 Bruxelles, Belgique</p>
               <p>📞 +32 (0) 4XX XX XX XX</p>
-              <p>✉️ <a href="mailto:contact@amana-janaza.com" style={{color: 'inherit', textDecoration: 'none'}}>contact@amana-janaza.com</a></p>
+              <p>✉️ <a href="mailto:contact@al-amanah-janaza.com" style={{color: 'inherit', textDecoration: 'none'}}>contact@al-amanah-janaza.com</a></p>
             </div>
             <div className="footer-social">
               <h4>Suivez-nous</h4>
@@ -263,7 +263,7 @@ function App() {
                 <p>Les données liées aux dossiers d'obsèques sont conservées en toute sécurité conformément aux obligations légales et comptables belges, et de manière confidentielle.</p>
                 
                 <h3>5. Vos droits</h3>
-                <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et d'effacement de vos données personnelles. Vous pouvez exercer ce droit à tout moment en nous contactant à <strong>contact@amana-janaza.com</strong>.</p>
+                <p>Conformément au RGPD, vous disposez d'un droit d'accès, de rectification et d'effacement de vos données personnelles. Vous pouvez exercer ce droit à tout moment en nous contactant à <strong>contact@al-amanah-janaza.com</strong>.</p>
               </div>
             )}
 

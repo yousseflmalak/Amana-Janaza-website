@@ -44,7 +44,7 @@ export default async function DashboardPage() {
       icon: <Mail size={18} color="var(--gold)" strokeWidth={1.8} />,
       label: 'Comptes Email',
       value: emailsCount !== null ? String(emailsCount) : '—',
-      sub: 'amana-janaza.com',
+      sub: 'al-amanah-janaza.com',
       href: '/dashboard/emails',
     },
     {

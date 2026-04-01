@@ -184,7 +184,7 @@ export default function SettingsPage() {
                 cursor: 'not-allowed',
               }}
             >
-              admin@amana-janaza.com
+              admin@al-amanah-janaza.com
             </div>
           </div>
 
@@ -510,7 +510,7 @@ export default function SettingsPage() {
           { label: 'Framework', value: 'Next.js 14 (App Router)' },
           { label: 'Base de données', value: 'Supabase (PostgreSQL)' },
           { label: 'Hébergement', value: 'Vercel' },
-          { label: 'Domaine email', value: 'amana-janaza.com (MXRoute)' },
+          { label: 'Domaine email', value: 'al-amanah-janaza.com (MXRoute)' },
         ].map((info, i) => (
           <div key={i}>
             <p
