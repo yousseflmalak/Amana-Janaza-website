@@ -234,6 +234,7 @@ function App() {
             <div style={{ marginTop: '1rem', fontSize: '0.9rem' }}>
               <a href="#privacy" onClick={(e) => { e.preventDefault(); setLegalView('privacy'); }} style={{ color: 'var(--text-muted)', marginRight: '20px', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--primary-gold)'} onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}>Politique de Confidentialité</a>
               <a href="#cookies" onClick={(e) => { e.preventDefault(); setLegalView('cookies'); }} style={{ color: 'var(--text-muted)', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--primary-gold)'} onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}>Gestion des Cookies</a>
+              <a href="https://admin.al-amanah-janaza.com" target="_blank" rel="noopener noreferrer" style={{ color: 'var(--text-muted)', marginLeft: '20px', fontSize: '0.75rem', letterSpacing: '0.05em', transition: 'color 0.3s' }} onMouseOver={e => e.currentTarget.style.color = 'var(--primary-gold)'} onMouseOut={e => e.currentTarget.style.color = 'var(--text-muted)'}>Espace admin</a>
             </div>
           </div>
         </div>
