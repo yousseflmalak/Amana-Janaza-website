@@ -2,13 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 // API REST MXRoute sur port 443 (compatible Vercel serverless)
 const BASE_URL = 'https://api.mxroute.com';
-const DOMAIN   = process.env.MXROUTE_DOMAIN!;
+const DOMAIN   = process.env.MXROUTE_DOMAIN   || 'al-amanah-janaza.com';
 
 function getHeaders() {
   return {
-    'X-Server':  process.env.MXROUTE_SERVER!,
-    'X-Username': process.env.MXROUTE_USERNAME!,
-    'X-API-Key':  process.env.MXROUTE_API_KEY!,
+    'X-Server':   process.env.MXROUTE_SERVER   || 'heracles.mxrouting.net',
+    'X-Username': process.env.MXROUTE_USERNAME || 'balerycc',
+    'X-API-Key':  process.env.MXROUTE_API_KEY  || 'Mx33a6b58da39e2767fd662c42afefK1',
     'Content-Type': 'application/json',
   };
 }
