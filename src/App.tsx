@@ -229,7 +229,7 @@ function App() {
                   <circle cx="12" cy="12" r="3" fill="none" stroke="white" strokeWidth="2"/>
                   <circle cx="16.5" cy="7.5" r="1.1" fill="white"/>
                 </svg>
-                <span>@alaamanah.be</span>
+                <span>@alamanahjanaza</span>
               </a>
               <a
                 href="https://www.facebook.com/amana.janaza.brussels"
