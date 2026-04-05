@@ -239,6 +239,35 @@ export default function FacebookPage() {
         </p>
       </div>
 
+      {/* Identifiants de connexion */}
+      <div
+        style={{
+          background: 'rgba(255,255,255,0.02)',
+          border: '1px solid #333',
+          borderRadius: '12px',
+          padding: '24px 28px',
+          marginBottom: '28px',
+        }}
+      >
+        <p style={{ fontFamily: 'Outfit, sans-serif', fontSize: '0.95rem', fontWeight: 600, color: '#f0ece3', marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          Identifiants du compte
+        </p>
+        <div style={{ display: 'flex', gap: '24px', flexWrap: 'wrap' }}>
+          <div>
+            <p style={{ fontSize: '0.75rem', color: '#666', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'Outfit, sans-serif' }}>Modifié le 01/04/2026 - Email / Utilisateur</p>
+            <p style={{ fontFamily: 'monospace', fontSize: '1rem', color: '#fff', background: '#0a0a0a', padding: '10px 14px', borderRadius: '8px', border: '1px solid #222' }}>
+              contact@al-amanah-janaza.com
+            </p>
+          </div>
+          <div>
+            <p style={{ fontSize: '0.75rem', color: '#666', marginBottom: '6px', textTransform: 'uppercase', letterSpacing: '0.05em', fontFamily: 'Outfit, sans-serif' }}>Mot de passe</p>
+            <p style={{ fontFamily: 'monospace', fontSize: '1rem', color: '#fff', background: '#0a0a0a', padding: '10px 14px', borderRadius: '8px', border: '1px solid #222' }}>
+              Alamanah@2026
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Stats manuelles */}
       <div style={{ marginBottom: '28px' }}>
         <p

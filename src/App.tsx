@@ -208,7 +208,7 @@ function App() {
             <div className="footer-social">
               <h4>Suivez-nous</h4>
               <a
-                href="https://www.instagram.com/alaamanah.be"
+                href="https://www.instagram.com/alamanahjanaza"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="instagram-link"
