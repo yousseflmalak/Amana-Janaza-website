@@ -232,18 +232,18 @@ function App() {
                 <span>@alamanahjanaza</span>
               </a>
               <a
-                href="https://www.facebook.com/amana.janaza.brussels"
+                href="https://www.facebook.com/profile.php?id=61574317744932"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="instagram-link"
-                aria-label="Suivez Amana-Janaza sur Facebook"
+                aria-label="Suivez Al-Amanah-Janaza sur Facebook"
                 style={{marginTop: '10px'}}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                   <rect x="2" y="2" width="20" height="20" rx="5" fill="#1877F2"/>
                   <path d="M13.5 8H12C11.4 8 11 8.4 11 9v2H9v2.5h2V19h2.5v-5.5H14l.5-2.5h-2V9.5c0-.3.2-.5.5-.5h1V8z" fill="white"/>
                 </svg>
-                <span>Amana Janaza</span>
+                <span>Al-Amanah-Janaza</span>
               </a>
               <p className="social-desc">Conseils, informations et actualités sur les rites funéraires islamiques.</p>
             </div>

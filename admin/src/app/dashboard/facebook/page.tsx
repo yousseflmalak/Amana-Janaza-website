@@ -13,7 +13,7 @@ import {
   Plus,
 } from 'lucide-react';
 
-const FACEBOOK_URL = 'https://www.facebook.com/amana.janaza.brussels';
+const FACEBOOK_URL = 'https://www.facebook.com/profile.php?id=61574317744932';
 const FACEBOOK_CREATE_PAGE = 'https://www.facebook.com/pages/create';
 
 const tips = [
@@ -146,7 +146,7 @@ export default function FacebookPage() {
             Facebook
           </h2>
           <p style={{ color: '#888', fontSize: '0.85rem', fontFamily: 'Outfit, sans-serif' }}>
-            Présence sociale — Amana Janaza
+            Présence sociale — Al-Amanah-Janaza
           </p>
         </div>
         <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
